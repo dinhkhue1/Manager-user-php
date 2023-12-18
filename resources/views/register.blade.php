@@ -99,7 +99,7 @@ span.psw {
 }
 
 /* Add Zoom Animation */
-.animate {
+/* .animate {
   -webkit-animation: animatezoom 0.6s;
   animation: animatezoom 0.6s
 }
@@ -112,7 +112,7 @@ span.psw {
 @keyframes animatezoom {
   from {transform: scale(0)} 
   to {transform: scale(1)}
-}
+} */
 
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
@@ -134,14 +134,33 @@ span.psw {
     @csrf
     <h1 class="title">Register</h1>
     <div class="container">
-      <label for="name"><b>Name</b></label>
-      <input type="text" placeholder="Enter name" name="name" required>
-
-      <label for="email"><b>Email</b></label>
-      <input type="text" placeholder="Enter email" name="email" required>
+      {{-- @if ($errors->all())
+         <div class="alert alert-danger text-center">
+           Kiểm tra lại dữ liệu
+          </div> 
+      @endif --}}
+      <div class="mb-3">
+        <label for="name"><b>Name</b></label>
+        <input type="text" placeholder="Enter name" name="name">
+        @error('name')
+          <span style="color: red;">{{$message}}</span>
+        @enderror
+      </div>
+      
+      <div class="mb-3">
+        <label for="email"><b>Email</b></label>
+        <input type="text" placeholder="Enter email" name="email">
+        @error('email')
+          <span style="color: red">{{$message}}</span>
+        @enderror
+      </div>
 
       <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="password" required>
+      <input type="password" placeholder="Enter Password" name="password">
+      @error('password')
+        <span style="color: red">{{$message}}</span>
+      @enderror
+
       <div class="gender">
         <label for="gender" style="margin-right: 50px"><b>Gender</b></label>
         <input type="radio" name="gender" value="male" id="male">

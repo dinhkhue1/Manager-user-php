@@ -1,14 +1,24 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Repositories\User\UserRepositoryInterface;
+use App\Repositories\User\UserRepository;
 
 use Illuminate\Http\Request;
 use Hash;
 use Auth;
 use App\Models\User;
 
+
 class UserController extends Controller
 {
+
+    protected $userRepo;
+
+    public function __construct(UserRepositoryInterface $userRepo)
+    {
+        $this->userRepo = $userRepo;
+    }
     public function login() {
         return view('login');
     }
@@ -23,7 +33,20 @@ class UserController extends Controller
         return view('Admin.create');
     }
     public function postRegister(Request $req) {
+        $rules = [
+            'name' => 'required|min:6',
+            'email' => 'required|min:6',
+            'password' => 'required|min:6',
+
+        ];
+        $messages = [
+            'required' => 'Trường :attribute bắt buộc phải nhập',
+            'min' => 'Trường :attribute không được nhỏ hơn :min ký tự',
+        ];
+        $req->validate($rules, $messages);
+        
         $req->merge(['password'=>Hash::make($req->password)]);
+       
         try {
             $imageBlob = '';
             $role = '';
@@ -88,8 +111,12 @@ class UserController extends Controller
     }
 
     public function getAllUser(){
-        $user = User::paginate(10);
-        return view('Admin.index', compact('user'))->with('i', (request()->input('page', 1) -1) *10);
+        // $message = exampleHelperFunction();
+        // dd($message);
+        $user = $this->userRepo->getUser();
+        // return view('Admin.index', compact('user'))->with('i', (request()->input('page', 1) -1));
+        // $user = User::paginate(4);
+        return view('Admin.index', compact('user'))->with('i');
     }
 
     public function createUserApi(Request $req){

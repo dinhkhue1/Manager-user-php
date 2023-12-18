@@ -105,6 +105,8 @@
         })
         .then(response => {
           if (!response.ok) {
+            const imgElement = document.getElementById('img');
+            imgElement.style.display = 'none';
             throw new Error('Network response was not ok');
           }
           return response.json();
